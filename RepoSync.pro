@@ -12,9 +12,19 @@ TEMPLATE = app
 RC_FILE = Resources.rc
 RESOURCES += Resources.qrc
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+DEFINES += REPOSYNC
 
-HEADERS  += mainwindow.h
+SOURCES += src/main.cpp\
+        src/main/mainwindow.cpp \
+    src/other/global.cpp \
+    src/other/knownprocess.cpp
 
-FORMS    += mainwindow.ui
+HEADERS  += src/main/mainwindow.h \
+    src/other/global.h \
+    src/other/knownprocess.h
+
+FORMS    += src/main/mainwindow.ui
+
+
+
+
