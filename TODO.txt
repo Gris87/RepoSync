@@ -1,0 +1,6 @@
+Check for parsing xml links like @*android:string/...
+Fix for ICS Tags from TokenGenerator
+Use QApplication::processEvents(QEventLoop::ExcludeUserInputEvents); after each ui->progressBar->setValue(i);
+Use Settings.Secure.Android_ID instead of IMEI for taking apks from the phone
+Create DOS application
+Change concept
