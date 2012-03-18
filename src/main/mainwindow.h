@@ -24,6 +24,8 @@ class MainWindow : public QMainWindow
 public:
     Ui::MainWindow *ui;
     int processCount;
+    bool inScanning;
+    QList<KnownProcess *> postProcessList;
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

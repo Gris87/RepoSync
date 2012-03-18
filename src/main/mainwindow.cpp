@@ -36,7 +36,9 @@ void MainWindow::startScanning()
 {
     processCount=0;
 
+    inScanning=true;
     scan(selectedDir);
+    inScanning=false;
 
     ui->logTextEdit->append("");
 
@@ -47,6 +49,11 @@ void MainWindow::startScanning()
     else
     {
         ui->logTextEdit->append("<span style=\" color:#ff0000;\">Nothing found. Try to modify file \""+QDir::toNativeSeparators(dir)+"data\\config.ini\"</span>");
+    }
+
+    for (int i=0; i<postProcessList.length(); i++)
+    {
+        processCompleted(postProcessList.at(i));
     }
 }
 
@@ -87,6 +94,12 @@ void MainWindow::scan(QString aFolder)
 
 void MainWindow::processCompleted(KnownProcess *aProcess)
 {
+    if (inScanning)
+    {
+        postProcessList.append(aProcess);
+        return;
+    }
+
     processCount--;
 
     ui->logTextEdit->append("<span style=\" color:#ff00ff;\"><b>Result for:</b></span> "+QDir::toNativeSeparators(aProcess->workingDirectory()));
