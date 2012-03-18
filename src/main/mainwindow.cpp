@@ -42,7 +42,7 @@ void MainWindow::startScanning()
 
     ui->logTextEdit->append("");
 
-    if (ui->logTextEdit->toPlainText().count("\n")>1)
+    if (ui->logTextEdit->toPlainText().count("\n")>2)
     {
         ui->logTextEdit->append("<span style=\" color:#00ff00;\">Scanning completed</span>");
         ui->logTextEdit->append("");
