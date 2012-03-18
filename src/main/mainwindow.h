@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow
 
 public:
     Ui::MainWindow *ui;
+    int processCount;
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

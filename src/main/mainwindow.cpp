@@ -34,6 +34,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::startScanning()
 {
+    processCount=0;
+
     scan(selectedDir);
 
     ui->logTextEdit->append("");
@@ -73,6 +75,8 @@ void MainWindow::scan(QString aFolder)
                 KnownProcess* aProcess=new KnownProcess(aFolder, this);
                 connect(aProcess, SIGNAL(completed(KnownProcess*)), this, SLOT(processCompleted(KnownProcess*)));
 
+                processCount++;
+
                 return;
             }
 
@@ -83,7 +87,15 @@ void MainWindow::scan(QString aFolder)
 
 void MainWindow::processCompleted(KnownProcess *aProcess)
 {
+    processCount--;
+
     ui->logTextEdit->append("<span style=\" color:#ff00ff;\"><b>Result for:</b></span> "+QDir::toNativeSeparators(aProcess->workingDirectory()));
+    ui->logTextEdit->append(aProcess->result);
+
+    if (processCount==0)
+    {
+        ui->logTextEdit->append("<span style=\" color:#00ff00;\">That's all. Good luck</span>");
+    }
 }
 
 void MainWindow::saveState()

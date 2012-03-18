@@ -13,7 +13,7 @@ public:
 
     QString result;
 
-    explicit KnownProcess(QString aWorkDirectory, QObject *parent = 0);
+    explicit KnownProcess(QString aWorkDirectory="", QObject *parent = 0);
 
 signals:
     void completed(KnownProcess *aProcess);

@@ -1,4 +1,4 @@
-#include "knownprocess.h"
+#include "src/other/global.h"
 
 KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     QProcess(parent)
@@ -16,14 +16,16 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     arguments.append("status");
 #endif
 
-    start("git", arguments);
+     qDebug()<<"start"<<aWorkDirectory<<arguments;
+    start("C:\Program Files\Git\bin\git", arguments);
 
     connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
 }
 
 void KnownProcess::processFinished(int code)
 {
+    qDebug()<<"processFinished";
     result.append(QString::fromUtf8(readAll()));
 
-    emit finished(this);
+    emit completed(this);
 }
