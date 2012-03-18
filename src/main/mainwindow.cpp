@@ -42,9 +42,10 @@ void MainWindow::startScanning()
 
     ui->logTextEdit->append("");
 
-    if (ui->logTextEdit->toPlainText().count("\n")>2)
+    if (ui->logTextEdit->toPlainText().count("\n")>1)
     {
         ui->logTextEdit->append("<span style=\" color:#00ff00;\">Scanning completed</span>");
+        ui->logTextEdit->append("");
     }
     else
     {
@@ -102,9 +103,9 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
 
     processCount--;
 
-    ui->logTextEdit->append("-----------------------------------------------------------------------------------------");
+    ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
     ui->logTextEdit->append("<span style=\" color:#ff00ff;\"><b>Result for:</b></span> "+QDir::toNativeSeparators(aProcess->workingDirectory()));
-    ui->logTextEdit->append("-----------------------------------------------------------------------------------------");
+    ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
     ui->logTextEdit->append("");
 
     ui->logTextEdit->append(aProcess->result);
