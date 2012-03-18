@@ -104,11 +104,67 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
     processCount--;
 
     ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
-    ui->logTextEdit->append("<span style=\" color:#ff00ff;\"><b>Result for:</b></span> "+QDir::toNativeSeparators(aProcess->workingDirectory()));
+    ui->logTextEdit->append(QDir::toNativeSeparators(aProcess->workingDirectory()));
     ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
     ui->logTextEdit->append("");
 
-    ui->logTextEdit->append(aProcess->result);
+#ifdef REPOSTATUS
+    int state=-1;
+#endif
+
+    QStringList aLines=aProcess->result.split("\n");
+
+    for (int i=0; i<aLines.length(); i++)
+    {
+        QString aOneLine=aLines.at(i);
+
+#ifdef REPOSYNC
+        ui->logTextEdit->append(aOneLine);
+#endif
+#ifdef REPOSTATUS
+        if (aOneLine.contains("Changes to be committed:"))
+        {
+            state=0;
+        }
+        else
+        if (aOneLine.contains("Changes not staged for commit:"))
+        {
+            state=1;
+        }
+        else
+        if (aOneLine.contains("Untracked files:"))
+        {
+            state=2;
+        }
+        else
+        if (
+            aOneLine.startsWith("#")
+            &&
+            aOneLine.length()>1
+            &&
+            aOneLine.at(1).unicode()==9
+           )
+        {
+            if (state>=0)
+            {
+                aOneLine.remove(0, 2);
+
+                if (state==0)
+                {
+                    aOneLine="<span style=\" color:#00ff00;\">"+aOneLine+"</span>";
+                }
+                else
+                {
+                    aOneLine="<span style=\" color:#ff0000;\">"+aOneLine+"</span>";
+                }
+
+                aOneLine.insert(0, "#<span style=\" color:#000000;\">.......</span>");
+            }
+        }
+
+        ui->logTextEdit->append(aOneLine);
+#endif
+    }
 
     if (processCount==0)
     {

@@ -25,6 +25,5 @@ HEADERS  += src/main/mainwindow.h \
 
 FORMS    += src/main/mainwindow.ui
 
-
-
-
+OTHER_FILES += \
+    TODO.txt
