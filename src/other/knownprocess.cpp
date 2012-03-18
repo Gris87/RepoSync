@@ -25,5 +25,34 @@ void KnownProcess::processFinished(int code)
 {
     result.append(QString::fromUtf8(readAll()));
 
+#ifdef REPOSYNC
+    step++;
+
+    if (step==1)
+    {
+        QStringList arguments;
+
+        arguments.append("clean");
+        arguments.append("-df");
+
+        start("C:\\Program Files\\Git\\bin\\git", arguments);
+    }
+    else
+    if (step==2)
+    {
+        QStringList arguments;
+
+        arguments.append("pull");
+
+        start("C:\\Program Files\\Git\\bin\\git", arguments);
+    }
+    else
+    if (step==3)
+    {
+        emit completed(this);
+    }
+#endif
+#ifdef REPOSTATUS
     emit completed(this);
+#endif
 }

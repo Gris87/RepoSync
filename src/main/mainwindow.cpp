@@ -102,7 +102,11 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
 
     processCount--;
 
+    ui->logTextEdit->append("-----------------------------------------------------------------------------------------");
     ui->logTextEdit->append("<span style=\" color:#ff00ff;\"><b>Result for:</b></span> "+QDir::toNativeSeparators(aProcess->workingDirectory()));
+    ui->logTextEdit->append("-----------------------------------------------------------------------------------------");
+    ui->logTextEdit->append("");
+
     ui->logTextEdit->append(aProcess->result);
 
     if (processCount==0)
