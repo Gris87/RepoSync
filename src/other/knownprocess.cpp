@@ -16,7 +16,7 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     arguments.append("status");
 #endif
 
-    start("C:\\Program Files\\Git\\bin\\git", arguments);
+    start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
 
     connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
 }
@@ -35,7 +35,7 @@ void KnownProcess::processFinished(int code)
         arguments.append("clean");
         arguments.append("-df");
 
-        start("C:\\Program Files\\Git\\bin\\git", arguments);
+        start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
     }
     else
     if (step==2)
@@ -44,7 +44,7 @@ void KnownProcess::processFinished(int code)
 
         arguments.append("pull");
 
-        start("C:\\Program Files\\Git\\bin\\git", arguments);
+        start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
     }
     else
     if (step==3)
