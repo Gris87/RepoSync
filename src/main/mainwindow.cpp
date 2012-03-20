@@ -32,6 +32,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (
+        processCount==0
+        &&
+        !inScanning
+       )
+    {
+        event->accept();
+    }
+    else
+    {
+        if (QMessageBox::question(this, "Are you go away?", "Task still in progress. Do you want to continue?", QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape)==QMessageBox::Yes)
+        {
+            event->accept();
+        }
+        else
+        {
+            event->ignore();
+        }
+    }
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (
@@ -99,7 +122,7 @@ void MainWindow::scan(QString aFolder)
             aFiles.at(i).isDir()
            )
         {
-            if (aFiles.at(i).fileName()==".git")
+            if (aFiles.at(i).fileName()==".git" && !aFolder.endsWith("/webDownloader/"))
             {
                 ui->logTextEdit->append("<span style=\" color:#ffff00;\"><b>Repository found:</b></span> "+QDir::toNativeSeparators(aFolder));
 

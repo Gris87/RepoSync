@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QMessageBox>
 
 #include "src/other/knownprocess.h"
 
@@ -34,6 +35,7 @@ public:
     void scan(QString aFolder);
 
 protected:
+    void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
 private:
