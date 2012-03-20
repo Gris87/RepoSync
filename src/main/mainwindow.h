@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QFile>
 #include <QTimer>
+#include <QKeyEvent>
 
 #include "src/other/knownprocess.h"
 
@@ -31,6 +32,9 @@ public:
     ~MainWindow();
 
     void scan(QString aFolder);
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     inline void saveState();

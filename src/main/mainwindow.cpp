@@ -32,6 +32,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (
+        processCount==0
+        &&
+        !inScanning
+        &&
+        (
+         event->key()==Qt::Key_Escape
+         ||
+         event->key()==Qt::Key_Return
+         ||
+         event->key()==Qt::Key_Enter
+        )
+       )
+    {
+        close();
+        return;
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
 void MainWindow::startScanning()
 {
     processCount=0;
@@ -108,9 +131,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
     ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
     ui->logTextEdit->append("");
 
-#ifdef REPOSTATUS
     int state=-1;
-#endif
 
     QStringList aLines=aProcess->result.split("\n");
 
@@ -119,6 +140,42 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
         QString aOneLine=aLines.at(i);
 
 #ifdef REPOSYNC
+        if (aOneLine.contains("Fast-forward"))
+        {
+            state=0;
+        }
+        else
+        if (
+            state==0
+            &&
+            aOneLine.contains("|")
+            &&
+            (
+             aOneLine.contains("+")
+             ||
+             aOneLine.contains("-")
+            )
+           )
+        {
+            QString pluses="";
+            QString minuses="";
+
+            while (aOneLine.endsWith("-"))
+            {
+                aOneLine.remove(aOneLine.length()-1, 1);
+                minuses.append("-");
+            }
+
+            while (aOneLine.endsWith("+"))
+            {
+                aOneLine.remove(aOneLine.length()-1, 1);
+                pluses.append("+");
+            }
+
+            aOneLine.append("<span style=\" color:#00ff00;\">"+pluses+"</span>");
+            aOneLine.append("<span style=\" color:#ff0000;\">"+minuses+"</span>");
+        }
+
         ui->logTextEdit->append(aOneLine);
 #endif
 #ifdef REPOSTATUS
