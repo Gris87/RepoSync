@@ -198,8 +198,6 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
             aOneLine.append("<span style=\" color:#00ff00;\">"+pluses+"</span>");
             aOneLine.append("<span style=\" color:#ff0000;\">"+minuses+"</span>");
         }
-
-        ui->logTextEdit->append(aOneLine);
 #endif
 #ifdef REPOSTATUS
         if (aOneLine.contains("Changes to be committed:"))
@@ -241,9 +239,8 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
                 aOneLine.insert(0, "#<span style=\" color:#000000;\">.......</span>");
             }
         }
-
-        ui->logTextEdit->append(aOneLine);
 #endif
+        ui->logTextEdit->append(aOneLine);
     }
 
     if (processCount==0)
