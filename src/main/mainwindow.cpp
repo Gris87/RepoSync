@@ -195,6 +195,28 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
                 pluses.append("+");
             }
 
+            for (int i=aOneLine.length()-1; i>=0; i--)
+            {
+                if (aOneLine.at(i)==' ')
+                {
+                    int end=i;
+                    QString aSpaces="";
+
+                    while (i>=0 && aOneLine.at(i)==' ')
+                    {
+                        i--;
+                        aSpaces.append("_");
+                    }
+
+                    i++;
+
+                    aSpaces.insert(0, "<span style=\" color:#000000;\">");
+                    aSpaces.append("</span>");
+
+                    aOneLine.replace(i, end-i+1, aSpaces);
+                }
+            }
+
             aOneLine.append("<span style=\" color:#00ff00;\">"+pluses+"</span>");
             aOneLine.append("<span style=\" color:#ff0000;\">"+minuses+"</span>");
         }
