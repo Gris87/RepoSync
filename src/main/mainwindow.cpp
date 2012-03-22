@@ -205,7 +205,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
                     while (i>=0 && aOneLine.at(i)==' ')
                     {
                         i--;
-                        aSpaces.append("_");
+                        aSpaces.append(".");
                     }
 
                     i++;
