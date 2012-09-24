@@ -28,6 +28,7 @@ public:
     int processCount;
     bool inScanning;
     QList<KnownProcess *> postProcessList;
+    QStringList importantProjects;
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

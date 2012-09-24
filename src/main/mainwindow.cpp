@@ -146,6 +146,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
     ui->logTextEdit->append("");
 
     int state=-1;
+    bool isImportant=false;
 
     QStringList aLines=aProcess->result.split("\n");
 
@@ -171,6 +172,8 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
             )
            )
         {
+            isImportant=true;
+
             QString pluses="";
             QString minuses="";
 
@@ -228,6 +231,12 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
             state=2;
         }
         else
+        if (aOneLine.contains("Your branch is ahead of"))
+        {
+            isImportant=true;
+            aOneLine="<span style=\" color:#ff0000;\">"+aOneLine+"</span>";
+        }
+        else
         if (
             aOneLine.startsWith("#")
             &&
@@ -238,6 +247,8 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
         {
             if (state>=0)
             {
+                isImportant=true;
+
                 aOneLine.remove(0, 2);
 
                 if (state==0)
@@ -256,8 +267,30 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
         ui->logTextEdit->append(aOneLine);
     }
 
+    if (isImportant)
+    {
+        importantProjects.append(QDir::toNativeSeparators(aProcess->workingDirectory()));
+    }
+
     if (processCount==0)
     {
+        if (importantProjects.length()>0)
+        {
+#ifdef REPOSYNC
+            ui->logTextEdit->append("<span style=\" color:#8080ff;\">Updated projects:</span>");
+#endif
+#ifdef REPOSTATUS
+            ui->logTextEdit->append("<span style=\" color:#8080ff;\">Please verify projects:</span>");
+#endif
+
+            for (int i=0; i<importantProjects.length(); ++i)
+            {
+                ui->logTextEdit->append(importantProjects.at(i));
+            }
+
+            ui->logTextEdit->append("");
+        }
+
         ui->logTextEdit->append("<span style=\" color:#00ff00;\">That's all. Good luck</span>");
     }
 }
