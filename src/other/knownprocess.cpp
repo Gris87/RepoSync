@@ -21,7 +21,7 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
 }
 
-void KnownProcess::processFinished(int code)
+void KnownProcess::processFinished(int /*code*/)
 {
     result.append(QString::fromUtf8(readAll()));
 

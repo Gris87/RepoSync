@@ -6,10 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QRect frect = frameGeometry();
-    frect.moveCenter(QDesktopWidget().availableGeometry().center());
-    move(frect.topLeft());
-
 #ifdef REPOSYNC
     setWindowTitle("RepoSync");
 #endif
@@ -44,7 +40,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
     else
     {
-        if (QMessageBox::question(this, "Are you go away?", "Task still in progress. Do you want to continue?", QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape)==QMessageBox::Yes)
+        if (QMessageBox::question(this, "Want to go?", "Task still in progress. Do you want to continue?", QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape)==QMessageBox::Yes)
         {
             event->accept();
         }
@@ -118,24 +114,19 @@ void MainWindow::scan(QString aFolder)
 
     for (int i=0; i<aFiles.length(); i++)
     {
-        if (
-            aFiles.at(i).isDir()
-           )
+        if (aFiles.at(i).fileName()==".git" && !aFolder.endsWith("/webDownloader/"))
         {
-            if (aFiles.at(i).fileName()==".git" && !aFolder.endsWith("/webDownloader/"))
-            {
-                ui->logTextEdit->append("<span style=\" color:#ffff00;\"><b>Repository found:</b></span> "+QDir::toNativeSeparators(aFolder));
+            ui->logTextEdit->append("<span style=\" color:#ffff00;\"><b>Repository found:</b></span> "+QDir::toNativeSeparators(aFolder));
 
-                KnownProcess* aProcess=new KnownProcess(aFolder, this);
-                connect(aProcess, SIGNAL(completed(KnownProcess*)), this, SLOT(processCompleted(KnownProcess*)));
+            KnownProcess* aProcess=new KnownProcess(aFolder, this);
+            connect(aProcess, SIGNAL(completed(KnownProcess*)), this, SLOT(processCompleted(KnownProcess*)));
 
-                processCount++;
+            processCount++;
 
-                return;
-            }
-
-            scan(aFolder+aFiles.at(i).fileName());
+            return;
         }
+
+        scan(aFolder+aFiles.at(i).fileName());
     }
 }
 
@@ -278,9 +269,11 @@ void MainWindow::saveState()
     QSettings aSettings(dir+"data/config.ini",QSettings::IniFormat);
 
     aSettings.beginGroup("Config");
-
     aSettings.setValue("Selected_Directory",selectedDir);
+    aSettings.endGroup();
 
+    aSettings.beginGroup("States");
+    aSettings.setValue("Geometry",saveGeometry());
     aSettings.endGroup();
 }
 
@@ -289,8 +282,10 @@ void MainWindow::loadState()
     QSettings aSettings(dir+"data/config.ini",QSettings::IniFormat);
 
     aSettings.beginGroup("Config");
-
     selectedDir=aSettings.value("Selected_Directory", dir).toString();
+    aSettings.endGroup();
 
+    aSettings.beginGroup("States");
+    restoreGeometry(aSettings.value("Geometry").toByteArray());
     aSettings.endGroup();
 }
