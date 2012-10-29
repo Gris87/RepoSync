@@ -76,6 +76,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::startScanning()
 {
+#ifdef REPOSYNC
+    setWindowTitle("RepoSync - Scanning");
+#endif
+#ifdef REPOSTATUS
+    setWindowTitle("RepoStatus - Scanning");
+#endif
+
     processCount=0;
 
     inScanning=true;
@@ -88,10 +95,24 @@ void MainWindow::startScanning()
     {
         ui->logTextEdit->append("<span style=\" color:#00ff00;\">Scanning completed</span>");
         ui->logTextEdit->append("");
+
+#ifdef REPOSYNC
+    setWindowTitle("RepoSync - Processing");
+#endif
+#ifdef REPOSTATUS
+    setWindowTitle("RepoStatus - Processing");
+#endif
     }
     else
     {
         ui->logTextEdit->append("<span style=\" color:#ff0000;\">Nothing found. Try to modify file \""+QDir::toNativeSeparators(dir)+"data\\config.ini\"</span>");
+
+#ifdef REPOSYNC
+    setWindowTitle("RepoSync - Scanning error");
+#endif
+#ifdef REPOSTATUS
+    setWindowTitle("RepoStatus - Scanning error");
+#endif
     }
 
     for (int i=0; i<postProcessList.length(); i++)
@@ -292,6 +313,15 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
         }
 
         ui->logTextEdit->append("<span style=\" color:#00ff00;\">That's all. Good luck</span>");
+
+#ifdef REPOSYNC
+        setWindowTitle("RepoSync - Completed");
+#endif
+#ifdef REPOSTATUS
+        setWindowTitle("RepoStatus - Completed");
+#endif
+
+        QApplication::alert(this);
     }
 }
 
