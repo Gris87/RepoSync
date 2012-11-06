@@ -135,7 +135,7 @@ void MainWindow::scan(QString aFolder)
 
     for (int i=0; i<aFiles.length(); i++)
     {
-        if (aFiles.at(i).fileName()==".git" && !aFolder.endsWith("/webDownloader/"))
+        if (aFiles.at(i).fileName()==".git" && !aFolder.endsWith("/webDownloader/") && !aFolder.endsWith("/ColladaToXG_UI/"))
         {
             ui->logTextEdit->append("<span style=\" color:#ffff00;\"><b>Repository found:</b></span> "+QDir::toNativeSeparators(aFolder));
 
