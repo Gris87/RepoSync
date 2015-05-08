@@ -1,6 +1,7 @@
 #include "src/other/global.h"
 
 #include <QSettings>
+#include <QTimer>
 
 
 
@@ -38,6 +39,8 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
         }
     }
 
+    connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
+
     setWorkingDirectory(aWorkDirectory);
 
     QStringList arguments;
@@ -52,8 +55,6 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
 #endif
 
     start(pathToGit, arguments);
-
-    connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
 }
 
 void KnownProcess::processFinished(int /*code*/)
@@ -61,33 +62,46 @@ void KnownProcess::processFinished(int /*code*/)
     result.append(QString::fromUtf8(readAll()));
 
 #ifdef REPOSYNC
-    step++;
-
-    if (step==1)
-    {
-        QStringList arguments;
-
-        arguments.append("clean");
-        arguments.append("-df");
-
-        start(pathToGit, arguments);
-    }
-    else
-    if (step==2)
-    {
-        QStringList arguments;
-
-        arguments.append("pull");
-
-        start(pathToGit, arguments);
-    }
-    else
-    if (step==3)
-    {
-        emit completed(this);
-    }
+    QTimer::singleShot(100, this, SLOT(delayedStart()));
 #endif
 #ifdef REPOSTATUS
     emit completed(this);
 #endif
 }
+
+#ifdef REPOSYNC
+void KnownProcess::delayedStart()
+{
+    ++step;
+
+    switch (step)
+    {
+        case 1:
+        {
+            QStringList arguments;
+
+            arguments.append("clean");
+            arguments.append("-df");
+
+            start(pathToGit, arguments);
+        }
+        break;
+
+        case 2:
+        {
+            QStringList arguments;
+
+            arguments.append("pull");
+
+            start(pathToGit, arguments);
+        }
+        break;
+
+        default:
+        {
+            emit completed(this);
+        }
+        break;
+    }
+}
+#endif

@@ -20,6 +20,10 @@ signals:
 
 public slots:
     void processFinished(int code);
+
+#ifdef REPOSYNC
+    void delayedStart();
+#endif
 };
 
 #endif // KNOWNPROCESS_H

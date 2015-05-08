@@ -173,7 +173,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
     ui->logTextEdit->append("-----------------------------------------------------------------------------------------------");
     ui->logTextEdit->append("");
 
-    int state=-1;
+    int state = -1;
     bool isImportant=false;
 
     QStringList aLines=aProcess->result.split("\n");
@@ -185,11 +185,11 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
 #ifdef REPOSYNC
         if (aOneLine.contains("Fast-forward"))
         {
-            state=0;
+            state = 0;
         }
         else
         if (
-            state==0
+            state == 0
             &&
             aOneLine.contains("|")
             &&
@@ -222,7 +222,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
                 if (aOneLine.at(i)==' ')
                 {
                     int end=i;
-                    QString aSpaces="";
+                    QString aSpaces="<span style=\" color:#000000;\">";
 
                     while (i>=0 && aOneLine.at(i)==' ')
                     {
@@ -232,7 +232,6 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
 
                     i++;
 
-                    aSpaces.insert(0, "<span style=\" color:#000000;\">");
                     aSpaces.append("</span>");
 
                     aOneLine.replace(i, end-i+1, aSpaces);
@@ -246,40 +245,34 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
 #ifdef REPOSTATUS
         if (aOneLine.contains("Changes to be committed:"))
         {
-            state=0;
+            state = 0;
         }
         else
         if (aOneLine.contains("Changes not staged for commit:"))
         {
-            state=1;
+            state = 1;
         }
         else
         if (aOneLine.contains("Untracked files:"))
         {
-            state=2;
+            state = 2;
         }
         else
         if (aOneLine.contains("Your branch is ahead of"))
         {
-            isImportant=true;
-            aOneLine="<span style=\" color:#ff0000;\">"+aOneLine+"</span>";
+            isImportant = true;
+            aOneLine    = "<span style=\" color:#ff0000;\">"+aOneLine+"</span>";
         }
         else
-        if (
-            aOneLine.startsWith("#")
-            &&
-            aOneLine.length()>1
-            &&
-            aOneLine.at(1).unicode()==9
-           )
+        if (aOneLine.startsWith('\t'))
         {
-            if (state>=0)
+            if (state >= 0)
             {
-                isImportant=true;
+                isImportant = true;
 
-                aOneLine.remove(0, 2);
+                aOneLine.remove(0, 1);
 
-                if (state==0)
+                if (state == 0)
                 {
                     aOneLine="<span style=\" color:#00ff00;\">"+aOneLine+"</span>";
                 }
@@ -288,7 +281,7 @@ void MainWindow::processCompleted(KnownProcess *aProcess)
                     aOneLine="<span style=\" color:#ff0000;\">"+aOneLine+"</span>";
                 }
 
-                aOneLine.insert(0, "#<span style=\" color:#000000;\">.......</span>");
+                aOneLine.insert(0, "<span style=\" color:#000000;\">.......</span>");
             }
         }
 #endif
