@@ -1,8 +1,43 @@
 #include "src/other/global.h"
 
+#include <QSettings>
+
+
+
+QString pathToGit;
+
+
+
 KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     QProcess(parent)
 {
+    if (pathToGit == "")
+    {
+        QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall", QSettings::NativeFormat);
+
+        QStringList groups = settings.childGroups();
+
+        for (int i = 0; i < groups.length(); ++i)
+        {
+            QString displayName = settings.value(groups.at(i) + "/DisplayName").toString();
+
+            if (displayName.contains("Git ver"))
+            {
+                QString installLocation = settings.value(groups.at(i) + "/InstallLocation").toString();
+
+                if (installLocation != "")
+                {
+                    pathToGit = QDir::fromNativeSeparators(installLocation + "/bin/git").replace("//", "/");
+                }
+            }
+        }
+
+        if (pathToGit == "")
+        {
+            pathToGit = "C:/Program Files/Git/cmd/git";
+        }
+    }
+
     setWorkingDirectory(aWorkDirectory);
 
     QStringList arguments;
@@ -16,7 +51,7 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
     arguments.append("status");
 #endif
 
-    start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
+    start(pathToGit, arguments);
 
     connect(this, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
 }
@@ -35,7 +70,7 @@ void KnownProcess::processFinished(int /*code*/)
         arguments.append("clean");
         arguments.append("-df");
 
-        start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
+        start(pathToGit, arguments);
     }
     else
     if (step==2)
@@ -44,7 +79,7 @@ void KnownProcess::processFinished(int /*code*/)
 
         arguments.append("pull");
 
-        start("C:\\Program Files\\Git\\cmd\\git.cmd", arguments);
+        start(pathToGit, arguments);
     }
     else
     if (step==3)

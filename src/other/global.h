@@ -1,11 +1,13 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include "qdebug.h"
+#include <QDebug>
 
 #include "src/main/mainwindow.h"
 
 #include "src/other/knownprocess.h"
+
+
 
 // FORMS
 extern MainWindow                *mainWindow;

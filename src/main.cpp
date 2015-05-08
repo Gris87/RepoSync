@@ -1,5 +1,8 @@
-#include <QtGui/QApplication>
+#include <QApplication>
+
 #include "src/other/global.h"
+
+
 
 int main(int argc, char *argv[])
 {
