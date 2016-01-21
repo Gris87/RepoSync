@@ -35,7 +35,31 @@ KnownProcess::KnownProcess(QString aWorkDirectory, QObject *parent) :
 
         if (pathToGit == "")
         {
-            pathToGit = "C:/Program Files/Git/cmd/git";
+            pathToGit = "C:/Program Files/Git/cmd/git.exe";
+
+            if (!QFile::exists(pathToGit))
+            {
+                pathToGit = "";
+
+                QList<QByteArray> paths = qgetenv("PATH").split(';');
+
+                for (int i = 0; i < paths.length(); ++i)
+                {
+                    QString path = QDir::fromNativeSeparators(QString::fromLatin1(paths.at(i))) + "/git.exe";
+
+                    if (QFile::exists(path))
+                    {
+                        pathToGit = path;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (pathToGit == "")
+        {
+            return;
         }
     }
 
